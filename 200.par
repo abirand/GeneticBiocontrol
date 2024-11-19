@@ -1,0 +1,235 @@
+#ifndef __PARAMETERS_H
+#define __PARAMETERS_H
+
+//**************************************************************************
+// HOUSE KEEPING PARAMETERS
+// Number of available processors (threads to create); _WIDTH _must_ be divisible by _CPUS
+// Note that this version runs only with 1 CPU, not optimized for multiple CPUs
+#define _CPUS                     1
+
+// Seed for the random number generator, 0 -> seed based on time
+#define _RAND_SEED                0
+
+// Log() only logs to graph file when (Gen%_SYS) == 0. _SYS == 0 -> disable
+#define _SYS                      1
+
+// Log() only logs to graph file when (Gen%_DEME) == 0. _DEME == 0 -> disable
+#define _DEME                     1
+
+// Log() only logs to graph file when (Gen%_DISTANCE) == 0. _DISTANCE == 0 -> disable
+#define _DISTANCE                 1
+
+// Log() only logs to graph file when (Gen%_SCENTSCAPE) == 0. _SCENTSCAPE == 0 -> disable
+#define _SCENTSCAPE               0
+
+// Log() only logs to state file when (Gen%_IND) == 0.  _IND == 0  -> disable
+#define _IND                      0
+#define _IND_SAMPLE               2
+
+// Log() only logs to graph file when (Gen%_HISTO) == 0. _HISTO == 0 -> disable
+#define _HISTO                    1
+
+//**************************************************************************
+// INITIALIZATION PARAMETERS
+// Width and height of environment
+// DO NOT FORGET TO ADJUST _MAXLEVEL ABOVE (32->5; 64->6)
+#define _WIDTH                    16
+#define _HEIGHT                   16
+
+// Number of different characteristics (for _*e and _*p only)
+#define _k                        4
+
+// Maximum number of individuals per patch: this has to do with memory allocation.
+// 128 hits the upper max regardless of _KO (even when it is 40, so make it 256!!!)
+#define _MAX_INDIVIDUALS          256
+
+// Initial number of individuals to initialize per patch
+// watch out for _MAX_INDIVIDUALS for memory and _K0 for dynamics (10 for cats on KI)
+#define _INIT_INDIVIDUALS         43
+
+// this is the 'dispersal range'
+// should be an ODD number
+// 1 (3), 2 (5), 3 (7)
+#define _DRANGE                   3
+
+//**************************************************************************
+//LIFE HISTORY PARAMETERS
+// maximum age of an individual (think in mating cycles!) if generations are overlapping
+// (mouse: 12 (2); cats: 10 (5); foxes: 6 (3); rabbits: 18 (3); black rat: 12(2); goats: 18(9))
+#define _MAXAGE                   12
+
+// number of mating cycles/year if generations are overlapping
+// has no implications whatsoever, to convert old gens to years
+// ***change it in view.h as well!
+// (mouse: 6; cats: 2; foxes: 2; rabbits: 6; black rat: 6; goats: 2)
+#define _MATINGCYCLES             6
+
+// Birth rate
+// (mouse: 6; cats: 5; foxes: 3; rabbits: 4; black rat: 5; goats: 2.1)
+#define _b                        6
+
+//**************************************************************************
+// GENE DRIVE PARAMETERS
+// STRATEGY tCRISPR: gene drive is t-allele (m) and prolactin knockout (f)
+#define _PROLACTINLOCUS           0     // (Boolean)
+#define _PROLACTINKNOCKOUT        0     // (Boolean) knocks out and skips infertile females
+#define _BOTHSEXKNOCKOUT          0     // (Boolean) 1. default prolactin knockout in males (0=OFF), in both sexes if ON(=1)
+#define _XKNOCKOUT                0     // (Boolean) 2. x shredder xknockout is in males
+#define _SHREDPROB                0.    // prob of knockout in _XKNOCKOUT
+#define _CRISPRLOCISEPERATE       0     // (Boolean) ON (1) if CRISPR is located outside the t-haplotype (knocks out in male)
+#define _RECOMRATE                0.0   // prob. of recombination between CRISPR and t-haplotype
+
+#define _MALEDRIVE                1     // (Boolean) inoculated individuals are male, otherwise random sex allocation
+
+//**************************************************************************
+// INOCULATION PARAMETERS
+// Boolean() only inoculates drive carrying individuals in THREAD() in thread.c if ON
+#define _INOC                     1
+
+// THESE THREE SHOULD BE CHANGED IN TANDEM
+// number of times (generations) the gene-drive individuals get inoculated;
+// adjust according to the entry _InocGen below
+#define _NoInoc                   12  //21
+
+// gene-drive individuals inoculation generations, separated by comma if _NoInoc>1, e.g. if _NoInoc=3, then {1,10,50}
+//#define _InocGen                {52,54,56,58,60,62,64,66,68,70}
+#define _InocGen                  {52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92}
+
+// this is inoculation in 1 every 4 cells...
+#define _InocMod                   3 //2: 64; 3: 36; 4: 16 patches
+
+// number of individuals to inoculate per patch
+// watch out for _MAX_INDIVIDUALS + _K0 for and dynamics
+#define _InocIndividuals           10
+
+//**************************************************************************
+
+// number of patches to inoculate (mainland invasion)
+//#define _InocPatchNo              1
+
+// coordinates of the patches (mainland invasion)
+//#define _InocCoor {32,0}
+
+
+// number of patches to inoculate
+//#define _InocPatchNo              16
+
+// coordinates of the patches
+//#define _InocCoor                 {2,2,6,2,10,2,14,2,2,6,6,6,10,6,14,6,2,10,6,10,10,10,14,10,2,14,6,14,10,14,14,14}
+
+//**************************************************************************
+//Boolean to monitor
+#define _MONITOR                  1
+
+// number of patches to monitor post culling (same as _InocPatchNo)
+//#define _MonitorPatchNo           16
+
+// coordinates of the patches for monitoring (same as _InocCoor)
+//#define _MonitorCoor              {2,2,6,2,10,2,14,2,2,6,6,6,10,6,14,6,2,10,6,10,10,10,14,10,2,14,6,14,10,14,14,14}
+
+//monitor duration (cycles) starts after culling (this is the same as _NoInoc?)
+//#define _MonitorDuration          6 //21
+
+// same as InocGen (logistically easy, but note that inoculations are done in the Next[][], so there is 
+// a single brreding cycle time gap between detection and response)
+#define _MonitorGen               {52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92}
+
+// popsize per patch to scale/calculate density (to calculate detection probability)
+#define _MaxPopScale              20
+
+// individual detection probability
+#define _IndDetectionP            1.0
+
+// boolean: toxic male detection. if OFF, detection is based on ind numbers in monitor patch
+#define _TOXICMALEDETECTION       0
+
+//**************************************************************************
+#define _NoCull                   6
+#define _CullGen                  {48,49,50,51,52,53}
+//#define _CullGen                  {48,49,50,51,52,53,54,55}
+
+// reduction in survival probabilities during culling events
+// multiplicative, i.e. new survival probability = _SPxM * _SURVIVALPROBABILITY
+#define _CullSurvival             0.20
+#define _CullOffspringSurvival    0.20
+
+//**************************************************************************
+// OTHER LIFE HISTORY PARAMETERS
+// BOOLEAN for mate choice in _TALLELE (t+ females prefer t- males) by a coefficient below
+#define _MATE_CHOICE              0
+#define _AVERSIONCOEFFICIENT      0.
+
+// (0.53; K=19 )
+#define _SURVIVALPROBABILITY      0.53//0.53
+#define _DRIVEFITNESS             1.0 // males only? or both sexes (currently males only)
+
+// Maximum carrying capacity (#K=round(-50*x + 45.75)) 10 for cats on KI if w=0.1
+// (cats: 12; rabbits: 0.6; )
+#define _K0                       16
+
+// (Boolean) set one of them to 1, rest to zero
+// _RAND_DISPERSAL: random dispersal
+// _DISTANCEDENSITYDISPERSAL: density dependent dispersal based on distance, define density threshold as well
+#define _RAND_DISPERSAL           0
+#define _DISTANCEDENSITYDISPERSAL 1
+#define _DISPERSALCOEF            0.5
+#define _DENSITYCOEF              1
+
+// (Boolean) dispersal mode: (1) Child dispersal, or (0) Parent dispersal
+// (PARENT DISPERSAL IS NOT USED CURRENTLY)
+// again for gene-drive models it should be 1, for parent dispersal
+// check the code before making it 0
+//#define _CHILD_DISPERSAL          1
+
+// prob. of BEHAVIORAL POLYANDRY per female. This is also the actual GENETIC POLYANDRY, since for simplicity
+// BEHAVIORAL POLYANDRY = GENETIC POLYANDRY, ALL multiple matings results in sires "multiple paternity opportunity"
+// multiple mating = two males only (default 0.46)
+#define _POLYANDRYPROB            0.8
+#define _PROBMATING               0.8
+
+// in multiple mating, the advantage of the first male's sperm (early sperm advantage, 1ST come 1ST serve, copulatory plug)
+// if both the males have the same genotype (w,w or dr,dr), then m1 = 0.7, m2 = 1-m1 = 0.3
+#define _FIRSTSPERMADVANTAGE      0.5
+
+// this is the 'offset' if the males are (w,dr), if (w,dr)=(0.7+0.2, (1-0.7)-0.2); if if (dr,w)=(0.7-0.2, (1-0.7)+0.2);
+// THE TWO ABOVE CANNOT BE GREATER THAN 1 (default 0.17)
+#define _SPERMCOMPETITIONCOEF     0.17
+
+//**************************************************************************
+// DO NOT CHANGE THESE
+// Number of loci per characteristic
+#define _Le                       1
+#define _Lp                       1
+#define _Lm                       1
+#define _Lk                       1
+#define _Lf                       1
+#define _Ln                       1
+
+// Number of bits per allele; _must_ be a member of {1,2,4,8}
+#define _Ae                       4
+#define _Ap                       4
+#define _Am                       4
+#define _Ak                       4
+#define _Af                       4
+#define _An                       1
+
+// Crossover rate: original code treats loci independently, there is free recombination between the loci/trait
+// but not used here since there is 1 Loci for each trait
+#define _Xi                       {0.,0.,0.,0.,0.,0.}
+
+// When enabled, this will cause niche to use Micheal's faster version of exp()
+#define  _FAST_EXP                1
+
+// Will cause some extra printing to be done if == 1 (2 for more)
+#define _VERBOSE                  1
+
+// Causes some timing information to be computed and printed
+#define _BENCHMARK                1
+
+// Prefix to use for output file names (before .ind, etc).  See FormatName() for more details
+#define _FILE_NAME                "%g"
+//**************************************************************************
+
+#endif
+
+//Actual Seed:           150839
